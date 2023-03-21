@@ -104,3 +104,7 @@ That's it, you are all setup, you can modify and run the code in your local VSCo
 ## Contributing
 
 Contributions are welcome. Please refrain from opinionated additions like linters. However, adding package managers and other DX improvements that are additive like `yarn` are welcome. Contributors must follow the [Code of Conduct](./CODE_OF_CONDUCT.md).
+
+## Important
+
+sudo apt install protobuf-compiler
