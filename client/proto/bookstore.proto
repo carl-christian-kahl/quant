@@ -7,16 +7,17 @@ package bookstore;
 service Bookstore {
   // Retrieve a book
   rpc GetBook(GetBookRequest) returns (GetBookResponse) {}
+  rpc GetAnotherBook(GetBookRequest) returns (GetBookResponse) {}
 }
 
 // The request with a id of the book
 message GetBookRequest {
-  string id = 1;
+  repeated int32 id = 1;
 }
 
 // The response details of a book
 message GetBookResponse {
-  string id = 1;
+  repeated int32 id = 1;
   string name = 2;
   string author = 3;
   int32 year = 4;

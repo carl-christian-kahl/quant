@@ -28,6 +28,20 @@ impl Bookstore for BookStoreImpl {
         };
         Ok(Response::new(response))
     }
+    async fn get_another_book(
+        &self,
+        request: Request<GetBookRequest>,
+    ) -> Result<Response<GetBookResponse>, Status> {
+        println!("Request from {:?}", request.remote_addr());
+
+        let response = GetBookResponse {
+            id: request.into_inner().id,
+            author: "Peter".to_owned(),
+            name: "Zero to One".to_owned(),
+            year: 2014,
+        };
+        Ok(Response::new(response))
+    }
 }
 
 #[tokio::main]

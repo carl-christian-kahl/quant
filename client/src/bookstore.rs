@@ -1,14 +1,14 @@
 /// The request with a id of the book
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetBookRequest {
-    #[prost(string, tag="1")]
-    pub id: ::prost::alloc::string::String,
+    #[prost(int32, repeated, tag="1")]
+    pub id: ::prost::alloc::vec::Vec<i32>,
 }
 /// The response details of a book
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct GetBookResponse {
-    #[prost(string, tag="1")]
-    pub id: ::prost::alloc::string::String,
+    #[prost(int32, repeated, tag="1")]
+    pub id: ::prost::alloc::vec::Vec<i32>,
     #[prost(string, tag="2")]
     pub name: ::prost::alloc::string::String,
     #[prost(string, tag="3")]
@@ -101,6 +101,25 @@ pub mod bookstore_client {
             );
             self.inner.unary(request.into_request(), path, codec).await
         }
+        pub async fn get_another_book(
+            &mut self,
+            request: impl tonic::IntoRequest<super::GetBookRequest>,
+        ) -> Result<tonic::Response<super::GetBookResponse>, tonic::Status> {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::new(
+                        tonic::Code::Unknown,
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static(
+                "/bookstore.Bookstore/GetAnotherBook",
+            );
+            self.inner.unary(request.into_request(), path, codec).await
+        }
     }
 }
 /// Generated server implementations.
@@ -112,6 +131,10 @@ pub mod bookstore_server {
     pub trait Bookstore: Send + Sync + 'static {
         /// Retrieve a book
         async fn get_book(
+            &self,
+            request: tonic::Request<super::GetBookRequest>,
+        ) -> Result<tonic::Response<super::GetBookResponse>, tonic::Status>;
+        async fn get_another_book(
             &self,
             request: tonic::Request<super::GetBookRequest>,
         ) -> Result<tonic::Response<super::GetBookResponse>, tonic::Status>;
@@ -189,6 +212,44 @@ pub mod bookstore_server {
                     let fut = async move {
                         let inner = inner.0;
                         let method = GetBookSvc(inner);
+                        let codec = tonic::codec::ProstCodec::default();
+                        let mut grpc = tonic::server::Grpc::new(codec)
+                            .apply_compression_config(
+                                accept_compression_encodings,
+                                send_compression_encodings,
+                            );
+                        let res = grpc.unary(method, req).await;
+                        Ok(res)
+                    };
+                    Box::pin(fut)
+                }
+                "/bookstore.Bookstore/GetAnotherBook" => {
+                    #[allow(non_camel_case_types)]
+                    struct GetAnotherBookSvc<T: Bookstore>(pub Arc<T>);
+                    impl<T: Bookstore> tonic::server::UnaryService<super::GetBookRequest>
+                    for GetAnotherBookSvc<T> {
+                        type Response = super::GetBookResponse;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::Response>,
+                            tonic::Status,
+                        >;
+                        fn call(
+                            &mut self,
+                            request: tonic::Request<super::GetBookRequest>,
+                        ) -> Self::Future {
+                            let inner = self.0.clone();
+                            let fut = async move {
+                                (*inner).get_another_book(request).await
+                            };
+                            Box::pin(fut)
+                        }
+                    }
+                    let accept_compression_encodings = self.accept_compression_encodings;
+                    let send_compression_encodings = self.send_compression_encodings;
+                    let inner = self.inner.clone();
+                    let fut = async move {
+                        let inner = inner.0;
+                        let method = GetAnotherBookSvc(inner);
                         let codec = tonic::codec::ProstCodec::default();
                         let mut grpc = tonic::server::Grpc::new(codec)
                             .apply_compression_config(
